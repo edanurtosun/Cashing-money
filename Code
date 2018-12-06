@@ -1,0 +1,1061 @@
+//edanur tosun 
+//merve tafral�
+#include <stdint.h>
+#include <string.h>
+#include "inc/tm4c123gh6pm.h"
+#include "inc/hw_ints.h"
+#include "inc/hw_types.h"
+#include "inc/hw_memmap.h"
+#include "driverlib/sysctl.h"
+#include "driverlib/gpio.h"
+#include "Lcd.h" //k�t�phane internet al�nmad�r
+void init_port_F() {
+	//port tan�mlar� internetten
+	volatile unsigned long tmp;
+	tmp = SYSCTL_RCGCGPIO_R;
+	SYSCTL_RCGCGPIO_R |= 0x00000020;
+	GPIO_PORTF_LOCK_R = 0x4C4F434B;
+	GPIO_PORTF_CR_R = 0x01;
+	GPIO_PORTF_DIR_R = 0x0E;
+	GPIO_PORTF_PUR_R = 0x11;
+	GPIO_PORTF_DEN_R = 0x1F;
+}
+void init_port_A() {
+	//port tan�mlar� internetten
+	volatile unsigned long delay;
+	SYSCTL_RCGC2_R |= SYSCTL_RCGC2_GPIOA; // Port D�yi aktiflestir
+	delay = SYSCTL_RCGC2_R;  	// zaman gecirmek icin
+	GPIO_PORTA_DIR_R |= 0xFF;	// PD 3,2,1,0 pinlerini cikis yap
+	GPIO_PORTA_AFSEL_R &= ~0xFF; // PD 3,2,1,0 pinlerini alternatif fonksinunu 0 yap
+	GPIO_PORTA_DEN_R |= 0xFF;	// PD 3,2,1,0 pinlerini aktiflestir
+}
+void init_port_B() {
+	//port tan�mlar� internetten
+	volatile unsigned long delay;
+	SYSCTL_RCGC2_R |= SYSCTL_RCGC2_GPIOB; // Port D�yi aktiflestir
+	delay = SYSCTL_RCGC2_R;  	// zaman gecirmek icin
+	GPIO_PORTB_DIR_R |= 0x7F;	// PD 3,2,1,0 pinlerini cikis yap
+	GPIO_PORTB_AFSEL_R &= ~0x7F; // PD 3,2,1,0 pinlerini alternatif fonksinunu 0 yap
+	GPIO_PORTB_DEN_R |= 0x7F;	// PD 3,2,1,0 pinlerini aktiflestir
+}
+
+void init_port_E() {
+	//port tan�mlar� internetten
+	volatile unsigned long tmp; // bu degisken gecikme yapmak icin gerekli
+	tmp = SYSCTL_RCGCGPIO_R;    	// allow time for clock to start
+	SYSCTL_RCGCGPIO_R |= 0x00000010;  // 1) activate clock for Port F
+	GPIO_PORTE_LOCK_R = 0x4C4F434B;   // 2) unlock GPIO Port F
+	GPIO_PORTE_CR_R = 0x01;       	// allow changes to PF-0
+	// only PF0 needs to be unlocked, other bits can't be locked
+	GPIO_PORTE_DIR_R = 0x00;      	// 5) PF4,PF0 in, PF3-1 out
+	GPIO_PORTE_PUR_R = 0x1F;      	// enable pull-up on PF0 and PF4
+	GPIO_PORTE_DEN_R = 0x1F;      	// 7) enable digital I/O on PF4-0
+}
+void init_port_D() {
+	//port tan�mlar� internetten
+	volatile unsigned long delay;
+	SYSCTL_RCGC2_R |= SYSCTL_RCGC2_GPIOD; // Port D�yi aktiflestir
+	delay = SYSCTL_RCGC2_R;  	// zaman gecirmek icin
+	GPIO_PORTD_CR_R = 0x01;       	// allow changes to PF-0
+	// only PF0 needs to be unlocked, other bits can't be locked
+	GPIO_PORTD_DIR_R = 0x00;      	// 5) PF4,PF0 in, PF3-1 out
+	GPIO_PORTD_PUR_R = 0x1F;      	// enable pull-up on PF0 and PF4
+	GPIO_PORTD_DEN_R = 0x1F;
+	// PD 3,2,1,0 pinlerini aktiflestir
+}
+void ekranaYaz1(int sayac) {
+
+	sayac = sayac % 10;
+
+	if (sayac == 1) {
+		Lcd_Goto(1, 1);
+		Lcd_Puts("1");
+		SysCtlDelay(10000000);
+		//Lcd_Temizle();
+	}
+	if (sayac == 2) {
+		Lcd_Goto(1, 1);
+		Lcd_Puts("2");
+		SysCtlDelay(10000000);
+		// Lcd_Temizle();
+	}
+	if (sayac == 3) {
+		Lcd_Goto(1, 1);
+		Lcd_Puts("3");
+		SysCtlDelay(10000000);
+
+	}
+	if (sayac == 4) {
+		Lcd_Goto(1, 1);
+		Lcd_Puts("4");
+		SysCtlDelay(10000000);
+	}
+
+	if (sayac == 5) {
+		Lcd_Goto(1, 1);
+		Lcd_Puts("5");
+		SysCtlDelay(10000000);
+	}
+	if (sayac == 6) {
+		Lcd_Goto(1, 1);
+		Lcd_Puts("6");
+		SysCtlDelay(10000000);
+	}
+	if (sayac == 7) {
+		Lcd_Goto(1, 1);
+		Lcd_Puts("7");
+		SysCtlDelay(10000000);
+
+	}
+	if (sayac == 8) {
+		Lcd_Goto(1, 1);
+		Lcd_Puts("8");
+		SysCtlDelay(10000000);
+	}
+	if (sayac == 9) {
+		Lcd_Goto(1, 1);
+		Lcd_Puts("9");
+		SysCtlDelay(10000000);
+	}
+
+}
+void ekranaYaz2(int sayac) {
+	sayac = sayac % 10;
+
+	if (sayac == 1) {
+		Lcd_Goto(1, 2);
+		Lcd_Puts("1");
+		SysCtlDelay(10000000);
+		//Lcd_Temizle();
+	}
+	if (sayac == 2) {
+		Lcd_Goto(1, 2);
+		Lcd_Puts("2");
+		SysCtlDelay(10000000);
+		// Lcd_Temizle();
+	}
+	if (sayac == 3) {
+		Lcd_Goto(1, 2);
+		Lcd_Puts("3");
+		SysCtlDelay(10000000);
+
+	}
+	if (sayac == 4) {
+		Lcd_Goto(1, 2);
+		Lcd_Puts("4");
+		SysCtlDelay(10000000);
+	}
+
+	if (sayac == 5) {
+		Lcd_Goto(1, 2);
+		Lcd_Puts("5");
+		SysCtlDelay(10000000);
+	}
+	if (sayac == 6) {
+		Lcd_Goto(1, 2);
+		Lcd_Puts("6");
+		SysCtlDelay(10000000);
+	}
+	if (sayac == 7) {
+		Lcd_Goto(1, 2);
+		Lcd_Puts("7");
+		SysCtlDelay(10000000);
+
+	}
+	if (sayac == 8) {
+		Lcd_Goto(1, 2);
+		Lcd_Puts("8");
+		SysCtlDelay(10000000);
+	}
+	if (sayac == 9) {
+		Lcd_Goto(1, 2);
+		Lcd_Puts("9");
+		SysCtlDelay(10000000);
+	}
+
+}
+void ekranaYaz3(int sayac) {
+	sayac = sayac % 10;
+
+	if (sayac == 1) {
+		Lcd_Goto(1, 4);
+		Lcd_Puts("1");
+		SysCtlDelay(10000000);
+		//Lcd_Temizle();
+	}
+	if (sayac == 2) {
+		Lcd_Goto(1, 4);
+		Lcd_Puts("2");
+		SysCtlDelay(10000000);
+		// Lcd_Temizle();
+	}
+	if (sayac == 3) {
+		Lcd_Goto(1, 4);
+		Lcd_Puts("3");
+		SysCtlDelay(10000000);
+
+	}
+	if (sayac == 4) {
+		Lcd_Goto(1, 4);
+		Lcd_Puts("4");
+		SysCtlDelay(10000000);
+	}
+
+	if (sayac == 5) {
+		Lcd_Goto(1, 4);
+		Lcd_Puts("5");
+		SysCtlDelay(10000000);
+	}
+	if (sayac == 6) {
+		Lcd_Goto(1, 4);
+		Lcd_Puts("6");
+		SysCtlDelay(10000000);
+	}
+	if (sayac == 7) {
+		Lcd_Goto(1, 4);
+		Lcd_Puts("7");
+		SysCtlDelay(10000000);
+
+	}
+	if (sayac == 8) {
+		Lcd_Goto(1, 4);
+		Lcd_Puts("8");
+		SysCtlDelay(10000000);
+	}
+	if (sayac == 9) {
+		Lcd_Goto(1, 4);
+		Lcd_Puts("9");
+		SysCtlDelay(10000000);
+	}
+
+}
+void ekranaYaz4(int sayac) {
+	sayac = sayac % 10;
+
+	if (sayac == 1) {
+		Lcd_Goto(1, 5);
+		Lcd_Puts("1");
+		SysCtlDelay(10000000);
+		//Lcd_Temizle();
+	}
+	if (sayac == 2) {
+		Lcd_Goto(1, 5);
+		Lcd_Puts("2");
+		SysCtlDelay(10000000);
+		// Lcd_Temizle();
+	}
+	if (sayac == 3) {
+		Lcd_Goto(1, 5);
+		Lcd_Puts("3");
+		SysCtlDelay(10000000);
+
+	}
+	if (sayac == 4) {
+		Lcd_Goto(1, 5);
+		Lcd_Puts("4");
+		SysCtlDelay(10000000);
+	}
+
+	if (sayac == 5) {
+		Lcd_Goto(1, 5);
+		Lcd_Puts("5");
+		SysCtlDelay(10000000);
+	}
+	if (sayac == 6) {
+		Lcd_Goto(1, 5);
+		Lcd_Puts("6");
+		SysCtlDelay(10000000);
+	}
+	if (sayac == 7) {
+		Lcd_Goto(1, 5);
+		Lcd_Puts("7");
+		SysCtlDelay(10000000);
+
+	}
+	if (sayac == 8) {
+		Lcd_Goto(1, 5);
+		Lcd_Puts("8");
+		SysCtlDelay(10000000);
+	}
+	if (sayac == 9) {
+		Lcd_Goto(1, 5);
+		Lcd_Puts("9");
+		SysCtlDelay(10000000);
+	}
+
+}
+
+void paraBoz2010(int s1) {
+
+	if (s1 % 2 == 1) {
+		s1 = s1 - 1;
+		int bolum = 0;
+		bolum = s1 / 2;
+
+		if (bolum == 0) {
+			Lcd_Goto(2, 1);
+			Lcd_Puts("0 tane yirmilik");
+			SysCtlDelay(30000000);
+
+		} else if (bolum == 2) {
+			Lcd_Goto(2, 1);
+			Lcd_Puts("2 tane yirmilik");
+			SysCtlDelay(30000000);
+
+		} else if (bolum == 3) {
+			Lcd_Goto(2, 1);
+			Lcd_Puts("3 tane yirmilik");
+			SysCtlDelay(30000000);
+
+		}
+		/*
+		 Lcd_Temizle();
+
+
+		 //ekrana yaz: 1 tane onluk var.
+		 Lcd_Goto(2, 1);
+		 Lcd_Puts("1 tane onluk");*/
+
+	} else {
+		int bolum = s1 / 2;
+		//ekrana yaz: kalan tane yirmilik var.
+		if (bolum == 0) {
+			Lcd_Goto(2, 1);
+			Lcd_Puts("0 tane yirmilik");
+			SysCtlDelay(30000000);
+
+		} else if (bolum == 1) {
+			Lcd_Goto(2, 1);
+			Lcd_Puts("2 tane yirmilik");
+			SysCtlDelay(30000000);
+
+		} else if (bolum == 2) {
+			Lcd_Goto(2, 1);
+			Lcd_Puts("3 tane yirmilik");
+			SysCtlDelay(30000000);
+
+		}
+
+	}
+
+}
+void paraBoz51(int s2) {
+	if (s2 >= 5) {
+		//ekrana yaz: 1 tane 5 lik var
+		s2 = s2 - 5;
+		int kalan = s2 / 1;
+		//ekrana yaz: kalan kadar 1 lik var
+	} else {
+		int kalan = s2 / 1;
+		//ekrana yaz: kalan kadar 1 lik var
+	}
+}
+int main(void) {
+	//lcd kodlar� internetten al�nmad�r
+
+	SysCtlClockSet(
+	SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_XTAL_16MHZ | SYSCTL_OSC_MAIN);
+	init_port_A();
+	init_port_D();
+	init_port_B();
+	init_port_E();
+	init_port_F();
+
+	volatile unsigned long delay; // compiler optimizasyonunu engellemek icin volatile kullandik
+	int but1, but2, but3, but6, but7, but4, but5;
+	int say1 = 0, say2 = 0, say3 = 0, say4 = 0;
+	//int yuzler = 0, onlar = 0, ondabir = 0, yuzdebir = 0;
+	char nokta;
+	float sayi = 0;
+	char dizi[5];
+	int k1 = 0, k2 = 0, k3 = 0, k4 = 0, k5 = 0;
+	Lcd_init();
+
+	while (1) {
+
+		but1 = GPIO_PORTE_DATA_R & 0b00000010;
+		but2 = GPIO_PORTE_DATA_R & 0b00000100;
+		but3 = GPIO_PORTE_DATA_R & 0b00001000;
+		but4 = GPIO_PORTE_DATA_R & 0b00010000;
+		but5 = GPIO_PORTE_DATA_R & 0b00000001;
+		but6 = GPIO_PORTF_DATA_R & 0b00001;
+		but7 = GPIO_PORTF_DATA_R & 0b10000;
+
+		if (but1 == 0) {
+			GPIO_PORTA_DATA_R = 0b00000100;
+			ekranaYaz1(say1);
+			dizi[0] = say1 + '0';
+			say1++;
+			k1++;
+
+		} else {
+			GPIO_PORTA_DATA_R &= ~(0b00000100);
+
+		}
+		if (but2 == 0) {
+			GPIO_PORTA_DATA_R = 0b00001000;
+			ekranaYaz2(say2);
+			dizi[1] = say2 + '0';
+			say2++;
+			k2++;
+
+		} else {
+			GPIO_PORTA_DATA_R &= ~(0b00001000);
+
+		}
+		if (but3 == 0) {
+			GPIO_PORTA_DATA_R = 0b00010000;
+			Lcd_Goto(1, 3);
+			Lcd_Puts(".");
+			SysCtlDelay(10000000);
+			dizi[2] = '.';
+			k3++;
+
+		} else {
+			GPIO_PORTA_DATA_R &= ~(0b00010000);
+
+		}
+		if (but4 == 0) {
+			GPIO_PORTA_DATA_R = 0b00100000;
+			ekranaYaz3(say3);
+			dizi[3] = say3 + '0';
+			say3++;
+			k4++;
+
+		} else {
+			GPIO_PORTA_DATA_R &= ~(0b00100000);
+
+		}
+		if (but5 == 0) {
+			GPIO_PORTA_DATA_R = 0b01000000;
+			ekranaYaz4(say4);
+			dizi[4] = say4 + '0';
+			say4++;
+			k5++;
+
+		} else {
+			GPIO_PORTA_DATA_R &= ~(0b01000000);
+
+		}
+		if (but6 == 0) {
+
+			GPIO_PORTF_DATA_R |= 0b00010;
+
+			/*dizi[4]=say1+'0';
+			 dizi[3]=say2+'0';
+			 dizi[2]='.';
+			 dizi[1]=say3+'0';
+			 dizi[0]=say4+'0';*/
+
+			Lcd_Temizle();
+			Lcd_Goto(1, 5);
+			Lcd_Puts("Girilen sayi");
+			Lcd_Goto(2, 12);
+			Lcd_Puts(dizi);
+			SysCtlDelay(40000000);
+			Lcd_Temizle();
+			Lcd_Goto(1, 12);
+			Lcd_Puts(dizi);
+
+			say1--;
+			if (say1 == 1) {
+				Lcd_Goto(2, 1);
+				Lcd_Puts("0 tane yirmilik");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("1 tane onluk   ");
+				SysCtlDelay(30000000);
+			} else if (say1 == 2) {
+				Lcd_Goto(2, 1);
+				Lcd_Puts("1 tane yirmilik");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("0 tane onluk   ");
+				SysCtlDelay(30000000);
+			} else if (say1 == 3) {
+				Lcd_Goto(2, 1);
+				Lcd_Puts("1 tane yirmilik");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("1 tane onluk   ");
+				SysCtlDelay(30000000);
+			} else if (say1 == 4) {
+				Lcd_Goto(2, 1);
+				Lcd_Puts("2 tane yirmilik");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("0 tane onluk   ");
+				SysCtlDelay(30000000);
+			} else if (say1 == 5) {
+				Lcd_Goto(2, 1);
+				Lcd_Puts("2 tane yirmilik");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("1 tane onluk   ");
+				SysCtlDelay(30000000);
+			} else if (say1 == 6) {
+				Lcd_Goto(2, 1);
+				Lcd_Puts("3 tane yirmilik");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("0 tane onluk   ");
+				SysCtlDelay(30000000);
+			} else if (say1 == 7) {
+				Lcd_Goto(2, 1);
+				Lcd_Puts("3 tane yirmilik");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("1 tane onluk   ");
+				SysCtlDelay(30000000);
+			} else if (say1 == 8) {
+				Lcd_Goto(2, 1);
+				Lcd_Puts("4 tane yirmilik");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("0 tane onluk   ");
+				SysCtlDelay(30000000);
+			} else if (say1 == 9) {
+				Lcd_Goto(2, 1);
+				Lcd_Puts("4 tane yirmilik");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("0 tane onluk   ");
+				SysCtlDelay(30000000);
+			}
+			say2--;
+			if (say2 == 1) {
+				Lcd_Goto(2, 1);
+				Lcd_Puts("0 tane beslik  ");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("1 tane birlik   ");
+				SysCtlDelay(30000000);
+			} else if (say2 == 2) {
+				Lcd_Goto(2, 1);
+				Lcd_Puts("0 tane beslik  ");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("2 tane birlik   ");
+				SysCtlDelay(30000000);
+			} else if (say2 == 3) {
+				Lcd_Goto(2, 1);
+				Lcd_Puts("0 tane beslik  ");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("3 tane birlik   ");
+				SysCtlDelay(30000000);
+			} else if (say2 == 4) {
+				Lcd_Goto(2, 1);
+				Lcd_Puts("0 tane beslik  ");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("4 tane birlik   ");
+				SysCtlDelay(30000000);
+			} else if (say2 == 5) {
+				Lcd_Goto(2, 1);
+				Lcd_Puts("1 tane beslik  ");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("0 tane birlik   ");
+				SysCtlDelay(30000000);
+			} else if (say2 == 6) {
+				Lcd_Goto(2, 1);
+				Lcd_Puts("1 tane beslik  ");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("1 tane birlik   ");
+				SysCtlDelay(30000000);
+			} else if (say2 == 7) {
+				Lcd_Goto(2, 1);
+				Lcd_Puts("1 tane beslik  ");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("2 tane birlik   ");
+				SysCtlDelay(30000000);
+			} else if (say2 == 8) {
+				Lcd_Goto(2, 1);
+				Lcd_Puts("1 tane beslik  ");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("3 tane birlik   ");
+				SysCtlDelay(30000000);
+			} else if (say2 == 9) {
+				Lcd_Goto(2, 1);
+				Lcd_Puts("1 tane beslik  ");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("4 tane birlik   ");
+				SysCtlDelay(30000000);
+			}
+			say3--;
+			say4--;
+			if (say3 == 1) {
+				Lcd_Goto(2, 1);
+				Lcd_Puts("0 tane 50krs  ");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("0 tane 25krs  ");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("1 tane 10krs  ");
+				SysCtlDelay(30000000);
+			} else if (say3 == 2 && say4 < 5) {
+				Lcd_Goto(2, 1);
+				Lcd_Puts("0 tane 50krs  ");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("0 tane 25krs  ");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("2 tane 10krs  ");
+				SysCtlDelay(30000000);
+			} else if (say3 == 2 && say4 >= 5) {
+				Lcd_Goto(2, 1);
+				Lcd_Puts("0 tane 50krs  ");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("1 tane 25krs  ");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("0 tane 10krs  ");
+				SysCtlDelay(30000000);
+			} else if (say3 == 3) {
+				Lcd_Goto(2, 1);
+				Lcd_Puts("0 tane 50krs  ");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("1 tane 25krs  ");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("0 tane 10krs  ");
+				SysCtlDelay(30000000);
+			} else if (say3 == 4 && say4 < 5) {
+				Lcd_Goto(2, 1);
+				Lcd_Puts("0 tane 50krs  ");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("1 tane 25krs  ");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("1 tane 10krs  ");
+				SysCtlDelay(30000000);
+			} else if (say3 == 4 && say4 >= 5) {
+				Lcd_Goto(2, 1);
+				Lcd_Puts("0 tane 50krs  ");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("1 tane 25krs  ");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("2 tane 10krs  ");
+				SysCtlDelay(30000000);
+			} else if (say3 == 5) {
+				Lcd_Goto(2, 1);
+				Lcd_Puts("1 tane 50krs  ");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("0 tane 25krs  ");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("0 tane 10krs  ");
+				SysCtlDelay(30000000);
+			} else if (say3 == 6) {
+				Lcd_Goto(2, 1);
+				Lcd_Puts("1 tane 50krs  ");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("0 tane 25krs  ");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("1 tane 10krs  ");
+				SysCtlDelay(30000000);
+			} else if (say3 == 7 && say4 < 5) {
+				Lcd_Goto(2, 1);
+				Lcd_Puts("1 tane 50krs  ");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("0 tane 25krs  ");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("2 tane 10krs  ");
+				SysCtlDelay(30000000);
+			} else if (say3 == 7 && say4 >= 5) {
+				Lcd_Goto(2, 1);
+				Lcd_Puts("1 tane 50krs  ");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("1 tane 25krs  ");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("0 tane 10krs  ");
+				SysCtlDelay(30000000);
+			} else if (say3 == 8) {
+				Lcd_Goto(2, 1);
+				Lcd_Puts("1 tane 50krs  ");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("1 tane 25krs  ");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("0 tane 10krs  ");
+				SysCtlDelay(30000000);
+			} else if (say3 == 9) {
+				Lcd_Goto(2, 1);
+				Lcd_Puts("1 tane 50krs  ");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("0 tane 25krs  ");
+				SysCtlDelay(30000000);
+				Lcd_Goto(2, 1);
+				Lcd_Puts("4 tane 10krs  ");
+				SysCtlDelay(30000000);
+			}
+
+		} else {
+			GPIO_PORTF_DATA_R &= ~0b00010;
+		}
+
+		//resetle
+		if (but7 == 0) {
+			GPIO_PORTF_DATA_R |= 0b00100;
+			Lcd_Temizle();
+			Lcd_Goto(1, 1);
+			Lcd_Puts("Tutar:");
+			SysCtlDelay(10000000);
+			Lcd_Temizle();
+			say1=0,say2=0,say3=0,say4=0;
+			if (but1 == 0) {
+				GPIO_PORTA_DATA_R = 0b00000100;
+				ekranaYaz1(say1);
+				dizi[0] = say1 + '0';
+				say1++;
+
+			} else {
+				GPIO_PORTA_DATA_R &= ~(0b00000100);
+
+			}
+			if (but2 == 0) {
+				GPIO_PORTA_DATA_R = 0b00001000;
+				ekranaYaz2(say2);
+				dizi[1] = say2 + '0';
+				say2++;
+
+			} else {
+				GPIO_PORTA_DATA_R &= ~(0b00001000);
+
+			}
+			if (but3 == 0) {
+				GPIO_PORTA_DATA_R = 0b00010000;
+				Lcd_Goto(1, 3);
+				Lcd_Puts(".");
+				SysCtlDelay(10000000);
+				dizi[2] = '.';
+
+			} else {
+				GPIO_PORTA_DATA_R &= ~(0b00010000);
+
+			}
+			if (but4 == 0) {
+				GPIO_PORTA_DATA_R = 0b00100000;
+				ekranaYaz3(say3);
+				dizi[3] = say3 + '0';
+				say3++;
+
+			} else {
+				GPIO_PORTA_DATA_R &= ~(0b00100000);
+
+			}
+			if (but5 == 0) {
+				GPIO_PORTA_DATA_R = 0b01000000;
+				ekranaYaz4(say4);
+				dizi[4] = say4 + '0';
+				say4++;
+
+			} else {
+				GPIO_PORTA_DATA_R &= ~(0b01000000);
+
+			}
+			if (but6 == 0) {
+
+				GPIO_PORTF_DATA_R |= 0b00010;
+
+				/*dizi[4]=say1+'0';
+				 dizi[3]=say2+'0';
+				 dizi[2]='.';
+				 dizi[1]=say3+'0';
+				 dizi[0]=say4+'0';*/
+
+				Lcd_Temizle();
+				Lcd_Goto(1, 5);
+				Lcd_Puts("Girilen sayi");
+				Lcd_Goto(2, 12);
+				Lcd_Puts(dizi);
+				SysCtlDelay(40000000);
+				Lcd_Temizle();
+				Lcd_Goto(1, 12);
+				Lcd_Puts(dizi);
+				say1--;
+				if (say1 == 1) {
+					Lcd_Goto(2, 1);
+					Lcd_Puts("0 tane yirmilik");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("1 tane onluk   ");
+					SysCtlDelay(30000000);
+				} else if (say1 == 2) {
+					Lcd_Goto(2, 1);
+					Lcd_Puts("1 tane yirmilik");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("0 tane onluk   ");
+					SysCtlDelay(30000000);
+				} else if (say1 == 3) {
+					Lcd_Goto(2, 1);
+					Lcd_Puts("1 tane yirmilik");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("1 tane onluk   ");
+					SysCtlDelay(30000000);
+				} else if (say1 == 4) {
+					Lcd_Goto(2, 1);
+					Lcd_Puts("2 tane yirmilik");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("0 tane onluk   ");
+					SysCtlDelay(30000000);
+				} else if (say1 == 5) {
+					Lcd_Goto(2, 1);
+					Lcd_Puts("2 tane yirmilik");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("1 tane onluk   ");
+					SysCtlDelay(30000000);
+				} else if (say1 == 6) {
+					Lcd_Goto(2, 1);
+					Lcd_Puts("3 tane yirmilik");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("0 tane onluk   ");
+					SysCtlDelay(30000000);
+				} else if (say1 == 7) {
+					Lcd_Goto(2, 1);
+					Lcd_Puts("3 tane yirmilik");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("1 tane onluk   ");
+					SysCtlDelay(30000000);
+				} else if (say1 == 8) {
+					Lcd_Goto(2, 1);
+					Lcd_Puts("4 tane yirmilik");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("0 tane onluk   ");
+					SysCtlDelay(30000000);
+				} else if (say1 == 9) {
+					Lcd_Goto(2, 1);
+					Lcd_Puts("4 tane yirmilik");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("0 tane onluk   ");
+					SysCtlDelay(30000000);
+				}
+				say2--;
+				if (say2 == 1) {
+					Lcd_Goto(2, 1);
+					Lcd_Puts("0 tane beslik  ");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("1 tane birlik   ");
+					SysCtlDelay(30000000);
+				} else if (say2 == 2) {
+					Lcd_Goto(2, 1);
+					Lcd_Puts("0 tane beslik  ");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("2 tane birlik   ");
+					SysCtlDelay(30000000);
+				} else if (say2 == 3) {
+					Lcd_Goto(2, 1);
+					Lcd_Puts("0 tane beslik  ");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("3 tane birlik   ");
+					SysCtlDelay(30000000);
+				} else if (say2 == 4) {
+					Lcd_Goto(2, 1);
+					Lcd_Puts("0 tane beslik  ");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("4 tane birlik   ");
+					SysCtlDelay(30000000);
+				} else if (say2 == 5) {
+					Lcd_Goto(2, 1);
+					Lcd_Puts("1 tane beslik  ");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("0 tane birlik   ");
+					SysCtlDelay(30000000);
+				} else if (say2 == 6) {
+					Lcd_Goto(2, 1);
+					Lcd_Puts("1 tane beslik  ");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("1 tane birlik   ");
+					SysCtlDelay(30000000);
+				} else if (say2 == 7) {
+					Lcd_Goto(2, 1);
+					Lcd_Puts("1 tane beslik  ");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("2 tane birlik   ");
+					SysCtlDelay(30000000);
+				} else if (say2 == 8) {
+					Lcd_Goto(2, 1);
+					Lcd_Puts("1 tane beslik  ");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("3 tane birlik   ");
+					SysCtlDelay(30000000);
+				} else if (say2 == 9) {
+					Lcd_Goto(2, 1);
+					Lcd_Puts("1 tane beslik  ");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("4 tane birlik   ");
+					SysCtlDelay(30000000);
+				}
+				say3--;
+				say4--;
+				if (say3 == 1) {
+					Lcd_Goto(2, 1);
+					Lcd_Puts("0 tane 50krs  ");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("0 tane 25krs  ");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("1 tane 10krs  ");
+					SysCtlDelay(30000000);
+				} else if (say3 == 2 && say4 < 5) {
+					Lcd_Goto(2, 1);
+					Lcd_Puts("0 tane 50krs  ");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("0 tane 25krs  ");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("2 tane 10krs  ");
+					SysCtlDelay(30000000);
+				} else if (say3 == 2 && say4 >= 5) {
+					Lcd_Goto(2, 1);
+					Lcd_Puts("0 tane 50krs  ");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("1 tane 25krs  ");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("0 tane 10krs  ");
+					SysCtlDelay(30000000);
+				} else if (say3 == 3) {
+					Lcd_Goto(2, 1);
+					Lcd_Puts("0 tane 50krs  ");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("1 tane 25krs  ");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("0 tane 10krs  ");
+					SysCtlDelay(30000000);
+				} else if (say3 == 4 && say4 < 5) {
+					Lcd_Goto(2, 1);
+					Lcd_Puts("0 tane 50krs  ");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("1 tane 25krs  ");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("1 tane 10krs  ");
+					SysCtlDelay(30000000);
+				} else if (say3 == 4 && say4 >= 5) {
+					Lcd_Goto(2, 1);
+					Lcd_Puts("0 tane 50krs  ");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("1 tane 25krs  ");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("2 tane 10krs  ");
+					SysCtlDelay(30000000);
+				} else if (say3 == 5) {
+					Lcd_Goto(2, 1);
+					Lcd_Puts("1 tane 50krs  ");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("0 tane 25krs  ");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("0 tane 10krs  ");
+					SysCtlDelay(30000000);
+				} else if (say3 == 6) {
+					Lcd_Goto(2, 1);
+					Lcd_Puts("1 tane 50krs  ");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("0 tane 25krs  ");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("1 tane 10krs  ");
+					SysCtlDelay(30000000);
+				} else if (say3 == 7 && say4 < 5) {
+					Lcd_Goto(2, 1);
+					Lcd_Puts("1 tane 50krs  ");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("0 tane 25krs  ");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("2 tane 10krs  ");
+					SysCtlDelay(30000000);
+				} else if (say3 == 7 && say4 >= 5) {
+					Lcd_Goto(2, 1);
+					Lcd_Puts("1 tane 50krs  ");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("1 tane 25krs  ");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("0 tane 10krs  ");
+					SysCtlDelay(30000000);
+				} else if (say3 == 8) {
+					Lcd_Goto(2, 1);
+					Lcd_Puts("1 tane 50krs  ");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("1 tane 25krs  ");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("0 tane 10krs  ");
+					SysCtlDelay(30000000);
+				} else if (say3 == 9) {
+					Lcd_Goto(2, 1);
+					Lcd_Puts("1 tane 50krs  ");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("0 tane 25krs  ");
+					SysCtlDelay(30000000);
+					Lcd_Goto(2, 1);
+					Lcd_Puts("4 tane 10krs  ");
+					SysCtlDelay(30000000);
+				}
+
+			} else {
+				GPIO_PORTF_DATA_R &= ~0b00010;
+			}
+
+		} else {
+			GPIO_PORTF_DATA_R &= ~0b00100;
+		}
+
+
+	}
+}
